@@ -45,7 +45,7 @@ def index():
     sehir = request.form.get("textcity")
 
 
-    if ilce==None:
+    if ilce!=None:
         df = pd.read_csv("samsunatakumrestoran.csv")
         data.my_dict["title"] = df["title"].tolist()
         data.my_dict["tel_num"] = df["tel_num"].tolist()
@@ -63,6 +63,9 @@ def index():
         data.my_dict["sehir"] = sehir
         data.my_dict["ilce"] = ilce
         data.my_dict["iskolu"] = iskolu
+        data.my_dict["sehir"] = "samsun"
+        data.my_dict["ilce"] = "atakum"
+        data.my_dict["iskolu"] = "restorant"
         query = data.my_dict["sehir"] + " " + data.my_dict["ilce"] + " " + data.my_dict["iskolu"]
         # Crawler entry point
         base_url = 'https://www.google.com/search'
