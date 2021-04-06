@@ -16,7 +16,7 @@ class DataStore():
 data =DataStore()
 
 app = Flask(__name__)
-app.config.assets.compile = True
+app.config.serve_static_assets =True
 app.config["SESSION_COOKIE_SECURE"]=False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'analyticteam'
