@@ -1,14 +1,11 @@
 pandas
 numpy
 flask
-mysql.connector
 gunicorn
 datetime
 PyJWT==v1.7.1
-openpyxl
-xlrd==1.2.0
 bs4
-
+requests
 
 
 
