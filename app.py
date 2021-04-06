@@ -40,32 +40,15 @@ def token_required(f):
 @app.route("/",methods=['GET', 'POST'])
 
 def index():
-    ilce = request.form.get("text-1")
-    iskolu = request.form.get("text-2")
-    sehir = request.form.get("textcity")
-
-
-    if ilce!=None:
-        df = pd.read_csv("samsunatakumrestoran.csv")
-        data.my_dict["title"] = df["title"].tolist()
-        data.my_dict["tel_num"] = df["tel_num"].tolist()
-        data.my_dict["adres"] = df["adres"].tolist()
-        data.my_dict["website"] = df["website"].tolist()
-        data.my_dict["len_df"] = len(df["title"].tolist())
 
 
 
-        data.my_dict["sehir"] = "samsun"
-        data.my_dict["ilce"] = "atakum"
-        data.my_dict["iskolu"] = "restorant"
-    else:
+    if request.method=="POST":
 
-        data.my_dict["sehir"] = sehir
-        data.my_dict["ilce"] = ilce
-        data.my_dict["iskolu"] = iskolu
-        data.my_dict["sehir"] = "samsun"
-        data.my_dict["ilce"] = "atakum"
-        data.my_dict["iskolu"] = "restorant"
+
+        data.my_dict["sehir"] = request.form.get("textcity")
+        data.my_dict["ilce"] = request.form.get("text-1")
+        data.my_dict["iskolu"] = request.form.get("text-2")
         query = data.my_dict["sehir"] + " " + data.my_dict["ilce"] + " " + data.my_dict["iskolu"]
         # Crawler entry point
         base_url = 'https://www.google.com/search'
@@ -114,7 +97,7 @@ def index():
         website = []
         tel_num = []
         for name in title:
-            query1 = name + " " + data.ilce + "/" + data.sehir
+            query1 = name + " " + data.my_dict["ilce"] + "/" + data.my_dict["sehir"]
             base_url1 = "https://www.google.com/search"
 
             # Query string parameters to crawl through results pages
@@ -181,6 +164,17 @@ def index():
         data.my_dict["website"] = df["website"].tolist()
         data.my_dict["len_df"] = len(df["title"].tolist())
         df.to_csv("samsunatakumrestoran.csv")
+    else:
+        df = pd.read_csv("samsunatakumrestoran.csv")
+        data.my_dict["title"] = df["title"].tolist()
+        data.my_dict["tel_num"] = df["tel_num"].tolist()
+        data.my_dict["adres"] = df["adres"].tolist()
+        data.my_dict["website"] = df["website"].tolist()
+        data.my_dict["len_df"] = len(df["title"].tolist())
+
+        data.my_dict["sehir"] = "samsun"
+        data.my_dict["ilce"] = "atakum"
+        data.my_dict["iskolu"] = "restorant"
 
 
 
