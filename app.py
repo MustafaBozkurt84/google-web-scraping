@@ -134,7 +134,7 @@ def index():
         website = []
         tel_num = []
         for name in title:
-            query1 = name + " " + data.my_dict["ilce"] +data.my_dict["sehir"]
+            query1 = name + " " + data.my_dict["ilce"] +"map"
             base_url1 = "https://www.google.com/search"
 
             # Query string parameters to crawl through results pages
@@ -185,51 +185,7 @@ def index():
                     pass
 
             #time.sleep(2)
-            content = BeautifulSoup(response1.content, 'html.parser')
-            adr = content.find('span', {'class': 'LrzXr'})
-            websit = content.find("a", {"class": "ab_button"})
-            if adr==None:
-                query1 = name + " " + "map"
-                params = {
-                    "q": query1,
-                    "biw": "1131",
-                    "bih": "969",
-                    "sxsrf": "ALeKk02DgultqaWun-XWtdRSnD8wR8tE5w:1617657840398",
-                    "ei": "8H9rYOfsF8GyqwHSwbmADQ",
-                    "oq": query1,
-                    "gs_lcp": "Cgdnd3Mtd2l6EAxQAFgAYO-HAWgAcAJ4AIABW4gBW5IBATGYAQCqAQdnd3Mtd2l6wAEB",
-                    "sclient": "gws-wiz",
-                    "ved": "0ahUKEwjnpMeHhejvAhVB2SoKHdJgDtAQ4dUDCA0"}
-                selected_proxy2 = random.sample(proxy_list, 5)[0]
-                response2 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy2},timeout=90)
-                while response2.status_code != 200:
-                    selected_proxy2 = random.sample(proxy_list, 5)[0]
-                    print(f"Using https://{selected_proxy2} proxy")
-                    try:
-                        response2 = requests.get(base_url, params=params, headers=headers,proxies={"http": selected_proxy2},timeout=90)
-                    except:
-                        pass
-                # time.sleep(2)
-                content = BeautifulSoup(response2.content, 'html.parser')
-                adr = content.find('span', {'class': 'LrzXr'})
-                websit = content.find("a", {"class": "ab_button"})
-                query1 = name + " " +data.my_dict["ilce"]+" "+ "map"
-                params = {
-                        "q": query1,
-                        "biw": "1131",
-                        "bih": "969",
-                        "sxsrf": "ALeKk02DgultqaWun-XWtdRSnD8wR8tE5w:1617657840398",
-                        "ei": "8H9rYOfsF8GyqwHSwbmADQ",
-                        "oq": query1,
-                        "gs_lcp": "Cgdnd3Mtd2l6EAxQAFgAYO-HAWgAcAJ4AIABW4gBW5IBATGYAQCqAQdnd3Mtd2l6wAEB",
-                        "sclient": "gws-wiz",
-                        "ved": "0ahUKEwjnpMeHhejvAhVB2SoKHdJgDtAQ4dUDCA0"}
-                selected_proxy2 = random.sample(proxy_list, 5)
-                try:
-                    response2 = requests.get(base_url, params=params, headers=headers,
-                                             proxies={"http": selected_proxy2},timeout=90)
-                except:
-                    pass
+
                 while response2.status_code != 200:
                         selected_proxy2 = random.sample(proxy_list, 5)
                         print(f"Using https://{selected_proxy2} proxy")
