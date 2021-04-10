@@ -5,6 +5,9 @@ import numpy as np
 from flask import Flask, jsonify, request, make_response,redirect,url_for,render_template
 import time
 from functools import wraps
+import os
+import random
+import pickle
 
 
 class DataStore():
@@ -86,18 +89,40 @@ def index():
             "x-client-data": "CIi2yQEIprbJAQjBtskBCKmdygEIlqzKAQj4x8oBCL2SywEIsZrLAQjknMsBCKmdywEY4JrLAQ=="}
 
         # Scraped results
-        # response=proxy.Proxy_Request(url=base_url, request_type=request_type,, params=params, headers=headers)
-        response = requests.get(base_url, params=params, headers=headers)
+
+        pickle_in = open('proxy_list.pkl', 'rb')
+        proxy_list = pickle.load(pickle_in)
+        proxy_list1 = proxy_list[len(proxy_list) - 100:len(proxy_list)]
+        for page in range(3):
+            url_proxy = "http://nntime.com/proxy-list-0{}.htm".format(page)
+            response = requests.get(url_proxy)
+            content = BeautifulSoup(response.content, 'html.parser')
+            title = [title.text.split("\n")[0] for title in content.findAll('tr', {'class': 'odd'})]
+            proxy_list.extend(title)
+            time.sleep(np.random.randint(5, size=(1))[0])
+
+        def pickle_all(key, value):
+            pickle_out = open(key + ".pkl", "wb")
+            pickle.dump(value, pickle_out)
+            pickle_out.close()
+
+        pickle_all("proxy_list", proxy_list)
+        proxy_list = proxy_list[len(proxy_list) - 200:len(proxy_list)]
+        proxy_list1 = proxy_list[len(proxy_list) - 5:len(proxy_list)]
+
+        response = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1})
+
+        while response.status_code!=200:
+            selected_proxy = random.sample(proxy_list, 5)
+            print(f"Using https://{selected_proxy} proxy")
+            response = requests.get(base_url, params=params, headers=headers, proxies={"http":selected_proxy})
         content = BeautifulSoup(response.content, 'html.parser')
         title = [title.text for title in content.findAll('div', {'class': 'dbg0pd'})]
-        star = [star.text for star in content.findAll('span', {'class': 'BTtC6e'})]
-        yorum_sayısı = [int(review_num.text.replace("(", "").replace(")", "")) for review_num in
-                        content.findAll('span', {'class': 'sBhnyP5sXkG__number-of-reviews sBhnyP5sXkG__vk_lt'})]
         adres = []
         website = []
         tel_num = []
         for name in title:
-            query1 = name + " " + data.my_dict["ilce"] + "/" + data.my_dict["sehir"]
+            query1 = name + " " + data.my_dict["ilce"] +data.my_dict["sehir"]
             base_url1 = "https://www.google.com/search"
 
             # Query string parameters to crawl through results pages
@@ -134,24 +159,93 @@ def index():
                 "x-client-data": "CIi2yQEIprbJAQjBtskBCKmdygEIlqzKAQj4x8oBCL2SywEIsZrLAQjknMsBCKmdywEY4JrLAQ=="}
 
             # Scraped results
+            response1 = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1})
 
-            response = requests.get(base_url1, params=params, headers=headers)
-            time.sleep(2)
-            content = BeautifulSoup(response.content, 'html.parser')
+            while response1.status_code != 200:
+                selected_proxy = random.sample(proxy_list, 5)
+                print(f"Using https://{selected_proxy} proxy")
+                response1 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy})
+
+            #time.sleep(2)
+            content = BeautifulSoup(response1.content, 'html.parser')
             adr = content.find('span', {'class': 'LrzXr'})
             websit = content.find("a", {"class": "ab_button"})
-            try:
-                adres.append(adr.text)
-            except:
-                adres.append(np.NaN)
-            try:
-                website.append(websit.get("href"))
-            except:
-                website.append(np.NaN)
-            try:
-                tel_num.append(content.find('span', {'role': 'link'}).text)
-            except:
-                tel_num.append(np.NaN)
+            if adr==None:
+                query1 = name + " " + "map"
+                params = {
+                    "q": query1,
+                    "biw": "1131",
+                    "bih": "969",
+                    "sxsrf": "ALeKk02DgultqaWun-XWtdRSnD8wR8tE5w:1617657840398",
+                    "ei": "8H9rYOfsF8GyqwHSwbmADQ",
+                    "oq": query1,
+                    "gs_lcp": "Cgdnd3Mtd2l6EAxQAFgAYO-HAWgAcAJ4AIABW4gBW5IBATGYAQCqAQdnd3Mtd2l6wAEB",
+                    "sclient": "gws-wiz",
+                    "ved": "0ahUKEwjnpMeHhejvAhVB2SoKHdJgDtAQ4dUDCA0"}
+                selected_proxy2 = random.sample(proxy_list, 5)
+                response2 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy2})
+                while response2.status_code != 200:
+                    selected_proxy2 = random.sample(proxy_list, 5)
+                    print(f"Using https://{selected_proxy2} proxy")
+                    response2 = requests.get(base_url, params=params, headers=headers,
+                                             proxies={"http": selected_proxy2})
+
+                # time.sleep(2)
+                content = BeautifulSoup(response2.content, 'html.parser')
+                adr = content.find('span', {'class': 'LrzXr'})
+                websit = content.find("a", {"class": "ab_button"})
+                query1 = name + " " +data.my_dict["ilce"]+" "+ "map"
+                params = {
+                        "q": query1,
+                        "biw": "1131",
+                        "bih": "969",
+                        "sxsrf": "ALeKk02DgultqaWun-XWtdRSnD8wR8tE5w:1617657840398",
+                        "ei": "8H9rYOfsF8GyqwHSwbmADQ",
+                        "oq": query1,
+                        "gs_lcp": "Cgdnd3Mtd2l6EAxQAFgAYO-HAWgAcAJ4AIABW4gBW5IBATGYAQCqAQdnd3Mtd2l6wAEB",
+                        "sclient": "gws-wiz",
+                        "ved": "0ahUKEwjnpMeHhejvAhVB2SoKHdJgDtAQ4dUDCA0"}
+                selected_proxy2 = random.sample(proxy_list, 5)
+                response2 = requests.get(base_url, params=params, headers=headers,
+                                             proxies={"http": selected_proxy2})
+                while response2.status_code != 200:
+                        selected_proxy2 = random.sample(proxy_list, 5)
+                        print(f"Using https://{selected_proxy2} proxy")
+                        response2 = requests.get(base_url, params=params, headers=headers,
+                                                 proxies={"http": selected_proxy2})
+
+                    # time.sleep(2)
+                content = BeautifulSoup(response2.content, 'html.parser')
+                adr = content.find('span', {'class': 'LrzXr'})
+                websit = content.find("a", {"class": "ab_button"})
+                try:
+                    adres.append(adr.text)
+
+                except:
+                    adres.append(np.NaN)
+                try:
+                    website.append(websit.get("href"))
+                except:
+                    website.append(np.NaN)
+                try:
+                    tel_num.append(content.find('span', {'role': 'link'}).text)
+                except:
+                    tel_num.append(np.NaN)
+            else:
+
+                try:
+                    adres.append(adr.text)
+
+                except:
+                    adres.append(np.NaN)
+                try:
+                    website.append(websit.get("href"))
+                except:
+                    website.append(np.NaN)
+                try:
+                    tel_num.append(content.find('span', {'role': 'link'}).text)
+                except:
+                    tel_num.append(np.NaN)
 
         df = pd.DataFrame()
         df["title"] = title
