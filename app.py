@@ -176,56 +176,35 @@ def index():
             except:
                 pass
 
-            while response1.status_code != 200:
-                selected_proxy = random.sample(proxy_list, 5)[0]
-                print(f"Using https://{selected_proxy} proxy")
-                try:
-                    response1 = requests.get(base_url, params=params, headers=headers, proxies={"https": selected_proxy},timeout=90)
-                except:
-                    pass
 
             #time.sleep(2)
 
-                while response2.status_code != 200:
-                        selected_proxy2 = random.sample(proxy_list, 5)
-                        print(f"Using https://{selected_proxy2} proxy")
-                        try:
-                            response2 = requests.get(base_url, params=params, headers=headers,
+            while response2.status_code != 200:
+                    selected_proxy2 = random.sample(proxy_list, 5)
+                    print(f"Using https://{selected_proxy2} proxy")
+                    try:
+                        response2 = requests.get(base_url, params=params, headers=headers,
                                                  proxies={"http": selected_proxy2},timeout=90)
-                        except:
-                            pass
+                    except:
+                         pass
                     # time.sleep(2)
-                content = BeautifulSoup(response2.content, 'html.parser')
-                adr = content.find('span', {'class': 'LrzXr'})
-                websit = content.find("a", {"class": "ab_button"})
-                try:
-                    adres.append(adr.text)
+            content = BeautifulSoup(response2.content, 'html.parser')
+            adr = content.find('span', {'class': 'LrzXr'})
+            websit = content.find("a", {"class": "ab_button"})
+            try:
+                adres.append(adr.text)
 
-                except:
-                    adres.append(np.NaN)
-                try:
-                    website.append(websit.get("href"))
-                except:
-                    website.append(np.NaN)
-                try:
-                    tel_num.append(content.find('span', {'role': 'link'}).text)
-                except:
-                    tel_num.append(np.NaN)
-            else:
+            except:
+                adres.append(np.NaN)
+            try:
+                website.append(websit.get("href"))
+            except:
+                website.append(np.NaN)
+            try:
+                tel_num.append(content.find('span', {'role': 'link'}).text)
+            except:
+                tel_num.append(np.NaN)
 
-                try:
-                    adres.append(adr.text)
-
-                except:
-                    adres.append(np.NaN)
-                try:
-                    website.append(websit.get("href"))
-                except:
-                    website.append(np.NaN)
-                try:
-                    tel_num.append(content.find('span', {'role': 'link'}).text)
-                except:
-                    tel_num.append(np.NaN)
 
         df = pd.DataFrame()
         df["title"] = title
