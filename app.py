@@ -95,7 +95,7 @@ def index():
         proxy_list1 = proxy_list[len(proxy_list) - 100:len(proxy_list)]
         for page in range(3):
             url_proxy = "http://nntime.com/proxy-list-0{}.htm".format(page)
-            response = requests.get(url_proxy,proxies={"http": proxy_list1},timeout=90)
+            response = requests.get(url_proxy,timeout=90)
             content = BeautifulSoup(response.content, 'html.parser')
             title = [title.text.split("\n")[0] for title in content.findAll('tr', {'class': 'odd'})]
             proxy_list.extend(title)
