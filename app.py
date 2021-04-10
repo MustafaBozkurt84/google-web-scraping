@@ -17,6 +17,30 @@ class DataStore():
         iskolu=None
 
 data =DataStore()
+pickle_in = open('proxy_list.pkl', 'rb')
+proxy_list = pickle.load(pickle_in)
+proxy_list1 = proxy_list[len(proxy_list) - 100:len(proxy_list)]
+for page in range(3):
+    url_proxy = "http://nntime.com/proxy-list-0{}.htm".format(page)
+    try:
+        response = requests.get(url_proxy, timeout=90)
+    except:
+        pass
+    content = BeautifulSoup(response.content, 'html.parser')
+    title = [title.text.split("\n")[0] for title in content.findAll('tr', {'class': 'odd'})]
+    proxy_list.extend(title)
+    time.sleep(np.random.randint(5, size=(1))[0])
+
+
+def pickle_all(key, value):
+    pickle_out = open(key + ".pkl", "wb")
+    pickle.dump(value, pickle_out)
+    pickle_out.close()
+
+
+pickle_all("proxy_list", proxy_list)
+proxy_list = proxy_list[len(proxy_list) - 200:len(proxy_list)]
+proxy_list1 = proxy_list[len(proxy_list) - 5:len(proxy_list)]
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -90,28 +114,7 @@ def index():
 
         # Scraped results
 
-        pickle_in = open('proxy_list.pkl', 'rb')
-        proxy_list = pickle.load(pickle_in)
-        proxy_list1 = proxy_list[len(proxy_list) - 100:len(proxy_list)]
-        for page in range(3):
-            url_proxy = "http://nntime.com/proxy-list-0{}.htm".format(page)
-            try:
-                response = requests.get(url_proxy,timeout=90)
-            except:
-                pass
-            content = BeautifulSoup(response.content, 'html.parser')
-            title = [title.text.split("\n")[0] for title in content.findAll('tr', {'class': 'odd'})]
-            proxy_list.extend(title)
-            time.sleep(np.random.randint(5, size=(1))[0])
 
-        def pickle_all(key, value):
-            pickle_out = open(key + ".pkl", "wb")
-            pickle.dump(value, pickle_out)
-            pickle_out.close()
-
-        pickle_all("proxy_list", proxy_list)
-        proxy_list = proxy_list[len(proxy_list) - 200:len(proxy_list)]
-        proxy_list1 = proxy_list[len(proxy_list) - 5:len(proxy_list)]
         try:
             response = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1[0]},timeout=90)
         except:
@@ -124,7 +127,7 @@ def index():
                 response = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy},timeout=90)
             except:
                 pass
-            time.sleep(np.random.randint(5, size=(1))[0])
+
         content = BeautifulSoup(response.content, 'html.parser')
         title = [title.text for title in content.findAll('div', {'class': 'dbg0pd'})]
         adres = []
@@ -180,7 +183,7 @@ def index():
                     response1 = requests.get(base_url, params=params, headers=headers, proxies={"https": selected_proxy},timeout=90)
                 except:
                     pass
-                time.sleep(np.random.randint(5, size=(1))[0])
+
             #time.sleep(2)
             content = BeautifulSoup(response1.content, 'html.parser')
             adr = content.find('span', {'class': 'LrzXr'})
@@ -206,7 +209,6 @@ def index():
                         response2 = requests.get(base_url, params=params, headers=headers,proxies={"http": selected_proxy2},timeout=90)
                     except:
                         pass
-                    time.sleep(np.random.randint(5, size=(1))[0])
                 # time.sleep(2)
                 content = BeautifulSoup(response2.content, 'html.parser')
                 adr = content.find('span', {'class': 'LrzXr'})
