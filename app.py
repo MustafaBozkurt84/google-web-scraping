@@ -121,7 +121,7 @@ def index():
             pass
 
         while response.status_code!=200:
-            selected_proxy = random.sample(proxy_list, 1)[0]
+            selected_proxy = random.sample(proxy_list, 5)[0]
             print(f"Using https://{selected_proxy} proxy")
             try:
                 response = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy},timeout=90)
@@ -177,7 +177,7 @@ def index():
                 pass
 
             while response1.status_code != 200:
-                selected_proxy = random.sample(proxy_list, 0)[0]
+                selected_proxy = random.sample(proxy_list, 5)[0]
                 print(f"Using https://{selected_proxy} proxy")
                 try:
                     response1 = requests.get(base_url, params=params, headers=headers, proxies={"https": selected_proxy},timeout=90)
@@ -200,10 +200,10 @@ def index():
                     "gs_lcp": "Cgdnd3Mtd2l6EAxQAFgAYO-HAWgAcAJ4AIABW4gBW5IBATGYAQCqAQdnd3Mtd2l6wAEB",
                     "sclient": "gws-wiz",
                     "ved": "0ahUKEwjnpMeHhejvAhVB2SoKHdJgDtAQ4dUDCA0"}
-                selected_proxy2 = random.sample(proxy_list, 1)[0]
+                selected_proxy2 = random.sample(proxy_list, 5)[0]
                 response2 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy2},timeout=90)
                 while response2.status_code != 200:
-                    selected_proxy2 = random.sample(proxy_list, 1)[0]
+                    selected_proxy2 = random.sample(proxy_list, 5)[0]
                     print(f"Using https://{selected_proxy2} proxy")
                     try:
                         response2 = requests.get(base_url, params=params, headers=headers,proxies={"http": selected_proxy2},timeout=90)
