@@ -109,13 +109,16 @@ def index():
         pickle_all("proxy_list", proxy_list)
         proxy_list = proxy_list[len(proxy_list) - 200:len(proxy_list)]
         proxy_list1 = proxy_list[len(proxy_list) - 5:len(proxy_list)]
-
-        response = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1},timeout=90)
+        try:
+            response = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1,"https": proxy_list1},timeout=90)
+        except:
+            response = requests.get(base_url, params=params, headers=headers,
+                                    proxies={"http": proxy_list1[0]}, timeout=90)
 
         while response.status_code!=200:
-            selected_proxy = random.sample(proxy_list, 5)
+            selected_proxy = random.sample(proxy_list, 1)[0]
             print(f"Using https://{selected_proxy} proxy")
-            response = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy},timeout=90)
+            response = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy,"https": selected_proxy},timeout=90)
             time.sleep(np.random.randint(5, size=(1))[0])
         content = BeautifulSoup(response.content, 'html.parser')
         title = [title.text for title in content.findAll('div', {'class': 'dbg0pd'})]
@@ -160,12 +163,14 @@ def index():
                 "x-client-data": "CIi2yQEIprbJAQjBtskBCKmdygEIlqzKAQj4x8oBCL2SywEIsZrLAQjknMsBCKmdywEY4JrLAQ=="}
 
             # Scraped results
-            response1 = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1},timeout=90)
-
+            try:
+                response1 = requests.get(base_url, params=params, headers=headers, proxies={"http": proxy_list1,"https": proxy_list1},timeout=90)
+            except:
+                response1 = requests.get(base_url, params=params, headers=headers,proxies={"http": proxy_list1}, timeout=90)
             while response1.status_code != 200:
-                selected_proxy = random.sample(proxy_list, 5)
+                selected_proxy = random.sample(proxy_list, 0)[0]
                 print(f"Using https://{selected_proxy} proxy")
-                response1 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy},timeout=90)
+                response1 = requests.get(base_url, params=params, headers=headers, proxies={"https": selected_proxy},timeout=90)
                 time.sleep(np.random.randint(5, size=(1))[0])
             #time.sleep(2)
             content = BeautifulSoup(response1.content, 'html.parser')
@@ -183,13 +188,12 @@ def index():
                     "gs_lcp": "Cgdnd3Mtd2l6EAxQAFgAYO-HAWgAcAJ4AIABW4gBW5IBATGYAQCqAQdnd3Mtd2l6wAEB",
                     "sclient": "gws-wiz",
                     "ved": "0ahUKEwjnpMeHhejvAhVB2SoKHdJgDtAQ4dUDCA0"}
-                selected_proxy2 = random.sample(proxy_list, 5)
+                selected_proxy2 = random.sample(proxy_list, 1)[0]
                 response2 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy2},timeout=90)
                 while response2.status_code != 200:
-                    selected_proxy2 = random.sample(proxy_list, 5)
+                    selected_proxy2 = random.sample(proxy_list, 1)[0]
                     print(f"Using https://{selected_proxy2} proxy")
-                    response2 = requests.get(base_url, params=params, headers=headers,
-                                             proxies={"http": selected_proxy2},timeout=90)
+                    response2 = requests.get(base_url, params=params, headers=headers,proxies={"http": selected_proxy2},timeout=90)
                     time.sleep(np.random.randint(5, size=(1))[0])
                 # time.sleep(2)
                 content = BeautifulSoup(response2.content, 'html.parser')
