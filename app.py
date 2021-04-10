@@ -179,16 +179,16 @@ def index():
 
             #time.sleep(2)
 
-            while response2.status_code != 200:
+            while response1.status_code != 200:
                     selected_proxy2 = random.sample(proxy_list, 5)
                     print(f"Using https://{selected_proxy2} proxy")
                     try:
-                        response2 = requests.get(base_url, params=params, headers=headers,
+                        response1 = requests.get(base_url, params=params, headers=headers,
                                                  proxies={"http": selected_proxy2},timeout=90)
                     except:
                          pass
                     # time.sleep(2)
-            content = BeautifulSoup(response2.content, 'html.parser')
+            content = BeautifulSoup(response1.content, 'html.parser')
             adr = content.find('span', {'class': 'LrzXr'})
             websit = content.find("a", {"class": "ab_button"})
             try:
