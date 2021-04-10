@@ -116,6 +116,7 @@ def index():
             selected_proxy = random.sample(proxy_list, 5)
             print(f"Using https://{selected_proxy} proxy")
             response = requests.get(base_url, params=params, headers=headers, proxies={"http":selected_proxy},timeout=None)
+            time.sleep(np.random.randint(5, size=(1))[0])
         content = BeautifulSoup(response.content, 'html.parser')
         title = [title.text for title in content.findAll('div', {'class': 'dbg0pd'})]
         adres = []
@@ -165,7 +166,7 @@ def index():
                 selected_proxy = random.sample(proxy_list, 5)
                 print(f"Using https://{selected_proxy} proxy")
                 response1 = requests.get(base_url, params=params, headers=headers, proxies={"http": selected_proxy},timeout=None)
-
+                time.sleep(np.random.randint(5, size=(1))[0])
             #time.sleep(2)
             content = BeautifulSoup(response1.content, 'html.parser')
             adr = content.find('span', {'class': 'LrzXr'})
@@ -189,7 +190,7 @@ def index():
                     print(f"Using https://{selected_proxy2} proxy")
                     response2 = requests.get(base_url, params=params, headers=headers,
                                              proxies={"http": selected_proxy2},timeout=None)
-
+                    time.sleep(np.random.randint(5, size=(1))[0])
                 # time.sleep(2)
                 content = BeautifulSoup(response2.content, 'html.parser')
                 adr = content.find('span', {'class': 'LrzXr'})
