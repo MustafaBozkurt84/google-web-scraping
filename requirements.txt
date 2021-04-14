@@ -6,7 +6,6 @@ datetime
 PyJWT==v1.7.1
 bs4
 requests
-Proxy-List-Scrapper
 
 
 
